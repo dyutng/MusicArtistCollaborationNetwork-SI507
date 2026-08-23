@@ -1,4 +1,4 @@
-##Music Artist Collaboration Network
+## Music Artist Collaboration Network
 Final project for SI 507: Intermediate Programming
 Python, Last.fm API, Claude Code, Codex
 
