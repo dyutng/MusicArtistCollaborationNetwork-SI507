@@ -24,11 +24,9 @@ The graph is seeded from 11 artists spanning hip-hop, pop, K-pop, indie, and ele
 
 ## Architecture
 
-- **`music_graph.py`**: the domain model.
-  - `Artist` is a small dataclass
-  - `MusicGraph` wraps a `networkx.Graph` and exposes only the operations the project actually needs (`shortest_path`, `top_by_centrality`, `filter_by_genre`, `get_neighbors`) rather than leaking the underlying graph library everywhere.
-- **`clients.py`**: `LastFmClient`, a thin wrapper around the Last.fm REST API with a JSON-backed response cache so identical requests never hit the network twice.
-- **`build_graph.py`**: BFS-style construction pipeline: pull an artist's info, pull their similar artists, enqueue any new ones, stop at a size cap, save the result.
+- **`music_graph.py`**: `Artist` dataclass + `MusicGraph` 
+- **`clients.py`**: `LastFmClient`, a Last.fm API wrapper with a JSON response cache
+- **`build_graph.py`**: builds the graph breadth-first from seed artists
 - **`main.py`** — the CLI shell that ties it together into the four interaction modes.
 
 Keeping the graph logic, the API client, and the construction pipeline in separate files meant I could unit-test `MusicGraph` completely in isolation — the test suite never makes a network call.
