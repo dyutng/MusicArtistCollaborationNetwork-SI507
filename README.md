@@ -20,11 +20,9 @@ The program is a command-line tool with four ways to explore the network:
 | **Influence Rankings** | Which artists are most connected, by degree centrality? |
 | **Genre Filter** | Which artists in the graph match a given genre or community tag? |
 
-The graph is seeded from 11 artists spanning hip-hop, pop, K-pop, indie, and electronic (Kendrick Lamar, Bad Bunny, TWICE, Mitski, Amy Winehouse, and others), then grown breadth-first through each artist's similar-artist list until it reaches a target size. A completed run produces a **52-artist, 45-edge network**, fully cached to disk so the CLI starts instantly on repeat runs instead of re-hitting the API.
+The graph is seeded from 11 artists spanning hip-hop, pop, K-pop, indie, and electronic (Kendrick Lamar, Bad Bunny, TWICE, Mitski, Amy Winehouse, and others), then grown through each artist's similar-artist list until it reaches a target size. A completed run produces a **52-artist, 45-edge network**.
 
 ## Architecture
-
-Four modules, each with one job:
 
 - **`music_graph.py`** — the domain model. `Artist` is a small dataclass; `MusicGraph` wraps a `networkx.Graph` and exposes only the operations the project actually needs (`shortest_path`, `top_by_centrality`, `filter_by_genre`, `get_neighbors`) rather than leaking the underlying graph library everywhere.
 - **`clients.py`** — `LastFmClient`, a thin wrapper around the Last.fm REST API with a JSON-backed response cache so identical requests never hit the network twice.
@@ -32,14 +30,6 @@ Four modules, each with one job:
 - **`main.py`** — the CLI shell that ties it together into the four interaction modes.
 
 Keeping the graph logic, the API client, and the construction pipeline in separate files meant I could unit-test `MusicGraph` completely in isolation — the test suite never makes a network call.
-
-## The Pivot: When the Plan Meets the API
-
-The original proposal called for Spotify as the primary data source, with Last.fm as an enrichment layer for listener counts and community tags. That's not what shipped.
-
-Spotify's Client Credentials flow doesn't actually expose a workable "related artists" or track-collaboration endpoint for this kind of open-ended graph building — the access needed for that lives behind partner-only permissions I didn't have. Rather than force a data source that couldn't deliver the edges the project depended on, I rebuilt around Last.fm as the sole source: it's unauthenticated, has no rate-limit wall for this scale of use, and its `artist.getsimilar` endpoint gives exactly the relationship data the graph needed — plus community tags that turned out to be a *better* genre signal than a fixed taxonomy would have been, since they capture how listeners actually describe an artist rather than a single official genre label.
-
-This is the part of the project I'm proudest of, honestly — not the code, but the decision to notice a broken assumption early (during the checkpoint week) and re-architect around it instead of shipping something that technically matched the proposal but didn't actually work.
 
 ## Engineering Decisions Worth Calling Out
 
