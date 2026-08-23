@@ -27,30 +27,12 @@ The graph starts from 11 seed artists across hip-hop, pop, K-pop, indie, and ele
 
 Splitting these apart meant the graph logic could be unit-tested completely offline.
 
-### Notes
-
-- Two caching layers: raw API responses (`cache.json`) and the assembled graph (`graph_cache.json`), so changing how the graph is built doesn't require new API calls.
-- Missing artist lookups return `None` instead of raising, so one bad name doesn't crash a multi-minute build.
-- Rankings use degree centrality rather than a more complex measure — since edges represent similarity, not directed influence, that's the honest way to describe what's being measured.
-
-## Testing
-
-29 unit tests, all running against small hand-built graphs (no network calls). They cover things like:
-
-- self-paths, disconnected nodes, and missing IDs returning `None` instead of erroring
-- genre filtering across both structured genres and Last.fm tags, case-insensitively
-- centrality correctly identifying the center of a star graph
-
-## What's next
+### What's next
 
 - Streamlit front end with a live graph visualization
 - Expanding past 52 artists into the thousands
 - An LLM layer to narrate a shortest path in plain language
 - Spotify audio features (tempo, energy, valence) layered onto each hop
-
-## Stack
-
-Python, `networkx`, Last.fm API, `requests`, `unittest`
 
 ---
 
