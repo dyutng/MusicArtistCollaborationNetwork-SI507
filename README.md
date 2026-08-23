@@ -24,9 +24,11 @@ The graph is seeded from 11 artists spanning hip-hop, pop, K-pop, indie, and ele
 
 ## Architecture
 
-- **`music_graph.py`** — the domain model. `Artist` is a small dataclass; `MusicGraph` wraps a `networkx.Graph` and exposes only the operations the project actually needs (`shortest_path`, `top_by_centrality`, `filter_by_genre`, `get_neighbors`) rather than leaking the underlying graph library everywhere.
-- **`clients.py`** — `LastFmClient`, a thin wrapper around the Last.fm REST API with a JSON-backed response cache so identical requests never hit the network twice.
-- **`build_graph.py`** — the BFS-style construction pipeline: pull an artist's info, pull their similar artists, enqueue any new ones, stop at a size cap, save the result.
+- **`music_graph.py`**: the domain model.
+  - `Artist` is a small dataclass
+  - `MusicGraph` wraps a `networkx.Graph` and exposes only the operations the project actually needs (`shortest_path`, `top_by_centrality`, `filter_by_genre`, `get_neighbors`) rather than leaking the underlying graph library everywhere.
+- **`clients.py`**: `LastFmClient`, a thin wrapper around the Last.fm REST API with a JSON-backed response cache so identical requests never hit the network twice.
+- **`build_graph.py`**: BFS-style construction pipeline: pull an artist's info, pull their similar artists, enqueue any new ones, stop at a size cap, save the result.
 - **`main.py`** — the CLI shell that ties it together into the four interaction modes.
 
 Keeping the graph logic, the API client, and the construction pipeline in separate files meant I could unit-test `MusicGraph` completely in isolation — the test suite never makes a network call.
@@ -59,11 +61,3 @@ With more time, the natural extensions are the ones the proposal's "dream scope"
 - Expanding past the current 52-artist seed set into the thousands, across more genres and eras
 - An LLM layer that turns a `shortest_path` result into a written narrative — *"Amy Winehouse's soul influence reaches TWICE through three hops of genre-blending pop"* — instead of a bare list of names
 - Spotify audio-feature data (tempo, energy, valence) layered onto each hop of a path, so a traversal shows not just *who* connects two artists but *how the sound itself shifts* along the way
-
-## Tech Stack
-
-Python · `networkx` · Last.fm API · `requests` · `unittest`
-
----
-
-*This was built for SI 507 (University of Michigan School of Information), a course on object-oriented design, graph/tree data structures, and API-driven applications.*
