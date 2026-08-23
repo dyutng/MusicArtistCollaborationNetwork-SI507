@@ -20,20 +20,7 @@ The graph starts from 11 seed artists across hip-hop, pop, K-pop, indie, and ele
 
 ### Architecture
 
-- `music_graph.py` — `Artist` dataclass + `MusicGraph`, a thin wrapper around `networkx.Graph`
-- `clients.py` — `LastFmClient`, a Last.fm API wrapper with a JSON response cache
-- `build_graph.py` — builds the graph breadth-first from seed artists
-- `main.py` — CLI with the four interaction modes
-
-Splitting these apart meant the graph logic could be unit-tested completely offline.
-
-### What's next
-
-- Streamlit front end with a live graph visualization
-- Expanding past 52 artists into the thousands
-- An LLM layer to narrate a shortest path in plain language
-- Spotify audio features (tempo, energy, valence) layered onto each hop
-
----
-
-Built for SI 507 (University of Michigan School of Information).
+- `music_graph.py`: `Artist` dataclass + `MusicGraph`, a thin wrapper around `networkx.Graph`
+- `clients.py`: `LastFmClient`, a Last.fm API wrapper with a JSON response cache
+- `build_graph.py`: builds the graph breadth-first from seed artists
+- `main.py`: CLI with the four interaction modes
